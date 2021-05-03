@@ -1,16 +1,31 @@
-# This is a sample Python script.
+import cv2
+import mediapipe as mp
+import HTModule as htm
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+cap = cv2.VideoCapture(1)
+det = htm.HandDetector()
+tips = [4,8,12,16,20]
 
+while True:
+    suc, img = cap.read()
+    img = det.FindHands(img,draw = False)
+    lmlist = det.FindPosition(img,draw = False)
+    if len(lmlist)!=0:
+        fingers = []
+        if lmlist[tips[0]][1] > lmlist[tips[0] - 2][1]:
+            fingers.append(1)
+        else:
+            fingers.append(0)
+        for id in range(1,5):
+            if lmlist[tips[id]][2]<lmlist[tips[id]-2][2]:
+                fingers.append(1)
+            else:
+                fingers.append(0)
+        h, w, c = img.shape
+        cv2.putText(img,str(fingers.count(1)),(w-50,h-50),cv2.FONT_HERSHEY_SIMPLEX,2,(255,255,255),6)
+        print(fingers.count(1))
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    #img  = cv2.flip(img,2)
+    cv2.imshow("Video", img)
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
