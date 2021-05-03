@@ -3,7 +3,7 @@ import mediapipe as mp
 import HTModule as htm
 
 cap = cv2.VideoCapture(1)
-det = htm.HandDetector()
+det = htm.HandDetector(detCon=0.9,tracCon=0.9)
 tips = [4,8,12,16,20]
 
 while True:
