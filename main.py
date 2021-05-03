@@ -12,7 +12,7 @@ while True:
     lmlist = det.FindPosition(img,draw = False)
     if len(lmlist)!=0:
         fingers = []
-        if lmlist[tips[0]][1] > lmlist[tips[0] - 2][1]:
+        if lmlist[tips[0]][1] < lmlist[tips[0] - 2][1]:
             fingers.append(1)
         else:
             fingers.append(0)
@@ -22,6 +22,7 @@ while True:
             else:
                 fingers.append(0)
         h, w, c = img.shape
+        cv2.rectangle(img,(630,370),(580,450),(0,0,0),cv2.FILLED)
         cv2.putText(img,str(fingers.count(1)),(w-50,h-50),cv2.FONT_HERSHEY_SIMPLEX,2,(255,255,255),6)
         print(fingers.count(1))
 
